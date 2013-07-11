@@ -10,38 +10,94 @@ namespace SortTest
     {
         public static void Main(string[] args)
         {
-            List<int> obj2_list = new List<int>();
-            Random r = new Random();
-            for (int i = 0; i < 10000; i++)
-            {
-                int temp = r.Next(1, 10000);
-                while (obj2_list.Contains(temp))
-                {
-                    temp = r.Next(1, 10000);
-                    if (obj2_list.Count == 9999)
-                    {
-                        break;
-                    }
-                }
-                obj2_list.Add(temp);
-            }
-            int[] obj2 = obj2_list.ToArray();
-            //Sort.BubbleSort(obj);
-            //Sort.ShowResult(obj);
+            int[] obj1 = Sort.GetIntArray(), obj2 = obj1, obj3 = obj1;
             Sort s_instance = new Sort();
+
+            //选择排序
             s_instance.StartTimer();
-            Sort.ShowSearchResult(Sort.NormalSearch(obj2, 55));
+            Sort.MaxSort(obj1);
             s_instance.StopTimer();
+
+            //冒泡排序
+            s_instance.StartTimer();
+            Sort.BubbleSort(obj2);
+            s_instance.StopTimer();
+
+            //新组排序
+            s_instance.StartTimer();
+            Sort.InsertSort(obj3);
+            s_instance.StopTimer();
+
+            Console.ReadKey();
+
+            Stack<int> s = new Stack<int>();
+            Queue<int> q = new Queue<int>();
+            foreach (int i in obj1)
+            {
+                s.Push(i);
+            }
+            foreach (int i in obj1)
+            {
+                q.Enqueue(i);
+            }
+            foreach (int i in s)
+            {
+                Console.WriteLine(i);
+            }
+            Console.ReadKey();
+            foreach (int i in q)
+            {
+                Console.WriteLine(i);
+            }
+            Console.ReadKey();
+
+            LinkedList<int> L = new LinkedList<int>();
+            foreach (int i in obj1)
+            {
+                L.AddLast(i);
+            }
+
+            foreach (int i in L)
+            {
+                Console.WriteLine(i);
+                
+            }
+            Console.WriteLine("First:"+L.First.Value);
+            Console.WriteLine("555:"+L.ElementAt(555));
+            Console.WriteLine("Last:"+L.Last.Value);
             Console.ReadKey();
         }
-        
     }
 
     public class Sort
     {
         private Stopwatch timer;
+
+        //动态生成数组
+        public static int[] GetIntArray()
+        {
+            int[] result = { };
+            List<int> temp_re = new List<int>();
+            Random r = new Random();
+            for (int i = 0; i < 10000; i++)
+            {
+                int temp = r.Next(1, 10000);
+                while (temp_re.Contains(temp))
+                {
+                    temp = r.Next(1, 10000);
+                    if (temp_re.Count == 9999)
+                    {
+                        break;
+                    }
+                }
+                temp_re.Add(temp);
+            }
+            result = temp_re.ToArray();
+            return result;
+        }
+
         /// <summary>
-        /// 冒泡排序
+        /// 冒泡排序 效率相对较低
         /// </summary>
         /// <param name="arr_obj"></param>
         public static void BubbleSort(int[] arr_obj)
@@ -62,15 +118,69 @@ namespace SortTest
         }
 
         /// <summary>
+        /// 选择排序 效率相对中等
+        /// </summary>
+        /// <param name="arr_obj"></param>
+        public static void MaxSort(int[] arr_obj)
+        {
+            int max;
+            int maxIndex;
+            for (int i = 0; i < arr_obj.Length; i++)
+            {
+                max = 0;
+                maxIndex = 0;
+                for (int j = 0; j < arr_obj.Length - i; j++)
+                {
+                    if (arr_obj[j] > max)
+                    {
+                        max = arr_obj[j];
+                        maxIndex = j;
+                    }
+                }
+                Sort.ChangeArray(arr_obj, maxIndex, arr_obj.Length - i - 1);
+            }
+        }
+
+        public static void InsertSort(int[] arr_obj)
+        {
+            int max;
+            int maxIndex;
+            List<int> temp = new List<int>();
+            for (int i = 0; i < arr_obj.Length; i++)
+            {
+                max = 0;
+                maxIndex = 0;
+                for (int j = 0; j < arr_obj.Length - i; j++)
+                {
+                    if (arr_obj[j] > max)
+                    {
+                        max = arr_obj[j];
+                        maxIndex = j;
+                    }
+                }
+                temp.Add(max);
+            }
+            temp.Reverse();
+            arr_obj = temp.ToArray();
+        }
+
+        private static void ChangeArray(int[] arr_obj, int i, int j)
+        {
+            int temp = arr_obj[i];
+            arr_obj[i] = arr_obj[j];
+            arr_obj[j] = temp;
+        }
+
+        /// <summary>
         /// 从索引0开始逐个查找
         /// </summary>
         /// <param name="arr_obj"></param>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static int NormalSearch(int[] arr_obj,int obj)
+        public static int NormalSearch(int[] arr_obj, int obj)
         {
-            int result=0;
-            for (int i =0;i<arr_obj.Length;i++)
+            int result = 0;
+            for (int i = 0; i < arr_obj.Length; i++)
             {
                 if (arr_obj[i] == obj)
                 {
@@ -81,8 +191,8 @@ namespace SortTest
         }
 
         public static void HalfSearch(int[] arr_obj)
-        { 
-            
+        {
+
         }
 
         /// <summary>
