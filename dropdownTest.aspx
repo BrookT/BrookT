@@ -61,21 +61,22 @@
         {
             position: fixed;
             background-image: url('Images/973.png');
-            background-repeat:no-repeat;
-            background-size:cover;
+            background-repeat: no-repeat;
+            background-size: cover;
         }
 
         .btn
         {
             cursor: pointer;
         }
+
         .topTab
         {
-            position:absolute;
-            top:0;
-            width:100%;
-            background-color:#ccc;
-            z-index:1000;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            background-color: #ccc;
+            z-index: 1000;
         }
     </style>
 </head>
@@ -104,6 +105,9 @@
         $(".downBtn").text('read more...').css("background-color", "#ddd").css("width", "100%");//.css("position","absolute")
     </script>
     <script>
+        var changeSpd = 1000;
+        var changeSpdQuick = 500;
+        var changeSpdSlow = 2000;
         var downTime = 0;
         var downTimeMax = 4;
         var windowHeight = document.documentElement.clientHeight + 'px';// window.screen.height
@@ -116,11 +120,10 @@
             bindEvents();
         });
         function initPage() {
-            alert(windowHeight);
             $(".container-div").css("height", windowHeight);
             $(".downBtn").css("height", tabHeight).css("line-height", tabHeight).css("bottom", "0px").css("top", tabMarginTop);
             $(".upBtn").css("height", rollTopHeight).css("width", rollTopWidth).css("right", rollTopRight).css("bottom", rollTopBottom).hide();
-            $(".topTab").css("height",tabHeight).css("line-height",tabHeight);
+            $(".topTab").css("height", tabHeight).css("line-height", tabHeight);
         }
         function bindEvents() {
             $(".downBtn").click(function () {
@@ -141,26 +144,42 @@
             $(".upBtn").click(function () {
                 Roll.rollTop("canvas-div");
             });
+            $(".downBtn").mouseout(function () {
+                //Tab.hideTab("downBtn");
+            }).mouseover(function () {
+                //Tab.showTab("downBtn");
+            });
         }
 
         var Roll = {
             rollDown: function (obj, instance) {
-                if (downTime >= 1)
-                {
+                if (downTime >= 1) {
                     this.showRollTop();
+                }
+                if (downTime == downTimeMax-1) {
+                    Tab.hideTab("downBtn");
                 }
                 $("#" + obj).animate({ marginTop: '-' + instance + 'px' });
             },
             rollTop: function (obj) {
                 downTime = 0;
                 this.hideRollTop();
+                Tab.showTab("downBtn");
                 $("#" + obj).animate({ marginTop: '0px' });
             },
             showRollTop: function () {
-                $("." + 'upBtn').show(1000);
+                $("." + 'upBtn').fadeIn(changeSpdQuick);
             },
             hideRollTop: function () {
-                $("." + 'upBtn').hide(1000);
+                $("." + 'upBtn').fadeOut(changeSpdQuick);
+            }
+        };
+        var Tab = {
+            showTab: function (obj) {
+                $("." + obj).fadeIn(changeSpdQuick);
+            },
+            hideTab: function (obj) {
+                $("." + obj).fadeOut(changeSpdQuick);
             }
         };
     </script>
