@@ -13,8 +13,8 @@
             float: none;
             margin-top: 0px;
             margin-left: 0px;
-            margin-right:0px;
-            margin-bottom:0px;
+            margin-right: 0px;
+            margin-bottom: 0px;
             padding: 0;
         }
 
@@ -30,8 +30,8 @@
             float: none;
             margin-top: 0px;
             margin-left: 0px;
-            margin-right:0px;
-            margin-bottom:0px;
+            margin-right: 0px;
+            margin-bottom: 0px;
             padding: 0;
             overflow: hidden;
         }
@@ -42,8 +42,8 @@
             vertical-align: middle;
             font-size: large;
             font-family: 迷你简卡通;
-            position:fixed;
-            bottom:0px;
+            position: fixed;
+            bottom: 0px;
         }
 
         .content-div
@@ -74,12 +74,17 @@
     </div>
     <div class="downBtn">
     </div>
+    <div class="upBtn">
+
+    </div>
     <script>
         $("div").css("width", "100%");
         $(".container-div").css("border-width", "2px").css("border-color", "orange").css("border-style", "solid");
         $(".downBtn").text('read more...').css("background-color", "#ddd");//.css("position","absolute")
     </script>
     <script>
+        var downTime = 0;
+        var downTimeMax = 5;
         var windowHeight = document.documentElement.clientHeight + 'px';// window.screen.height
         var tabHeight = document.documentElement.clientHeight * 0.1 + 'px';
         var tabMarginTop = document.documentElement.clientHeight * 0.9 + 'px';
@@ -87,7 +92,13 @@
         $(".downBtn").css("height", tabHeight).css("line-height", tabHeight).css("margin-bottom", "0px").css("margin-top", tabMarginTop);
         $(".downBtn").click(function () {
             //slide
-            $("#canvas-div").animate({ "top": "958px" });
+            if (downTime >= downTimeMax)
+            { return; }
+            else
+            {
+                downTime++;
+                $("#canvas-div").animate({ marginTop: '-' + document.documentElement.clientHeight * downTime + 'px' });//.animate({ "top": "958px" })
+            }
         });
     </script>
 </body>
