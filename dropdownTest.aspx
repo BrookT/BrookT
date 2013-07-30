@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title></title>
+    <title>Drag Down Test</title>
     <script src="Scripts/jquery-1.8.2.min.js"></script>
     <style>
         body, form, div
@@ -44,6 +44,7 @@
             font-family: 迷你简卡通;
             position: fixed;
             bottom: 0px;
+            cursor: pointer;
         }
 
         .content-div
@@ -55,9 +56,31 @@
         {
             position: relative;
         }
+
+        .upBtn
+        {
+            position: fixed;
+            background-image: url('Images/973.png');
+            background-repeat:no-repeat;
+            background-size:cover;
+        }
+
+        .btn
+        {
+            cursor: pointer;
+        }
+        .topTab
+        {
+            position:absolute;
+            top:0;
+            width:100%;
+            background-color:#ccc;
+            z-index:1000;
+        }
     </style>
 </head>
 <body>
+    <div class="topTab">Header</div>
     <div id="canvas-div">
         <div id="div1" class="container-div">
             <div class="content-div">div1</div>
@@ -74,32 +97,72 @@
     </div>
     <div class="downBtn">
     </div>
-    <div class="upBtn">
-
+    <div class="upBtn btn">
     </div>
     <script>
-        $("div").css("width", "100%");
-        $(".container-div").css("border-width", "2px").css("border-color", "orange").css("border-style", "solid");
-        $(".downBtn").text('read more...').css("background-color", "#ddd");//.css("position","absolute")
+        $(".container-div").css("border-width", "1px").css("border-color", "orange").css("border-style", "solid");
+        $(".downBtn").text('read more...').css("background-color", "#ddd").css("width", "100%");//.css("position","absolute")
     </script>
     <script>
         var downTime = 0;
-        var downTimeMax = 5;
+        var downTimeMax = 4;
         var windowHeight = document.documentElement.clientHeight + 'px';// window.screen.height
         var tabHeight = document.documentElement.clientHeight * 0.1 + 'px';
+        var rollTopRight = rollTopBottom = document.documentElement.clientHeight * 0.1 + 'px';
+        var rollTopWidth = rollTopHeight = document.documentElement.clientHeight * 0.1 + 'px';
         var tabMarginTop = document.documentElement.clientHeight * 0.9 + 'px';
-        $(".container-div").css("height", windowHeight);
-        $(".downBtn").css("height", tabHeight).css("line-height", tabHeight).css("margin-bottom", "0px").css("margin-top", tabMarginTop);
-        $(".downBtn").click(function () {
-            //slide
-            if (downTime >= downTimeMax)
-            { return; }
-            else
-            {
-                downTime++;
-                $("#canvas-div").animate({ marginTop: '-' + document.documentElement.clientHeight * downTime + 'px' });//.animate({ "top": "958px" })
-            }
+        $(function () {
+            initPage();
+            bindEvents();
         });
+        function initPage() {
+            alert(windowHeight);
+            $(".container-div").css("height", windowHeight);
+            $(".downBtn").css("height", tabHeight).css("line-height", tabHeight).css("bottom", "0px").css("top", tabMarginTop);
+            $(".upBtn").css("height", rollTopHeight).css("width", rollTopWidth).css("right", rollTopRight).css("bottom", rollTopBottom).hide();
+            $(".topTab").css("height",tabHeight).css("line-height",tabHeight);
+        }
+        function bindEvents() {
+            $(".downBtn").click(function () {
+                //slide
+                downTime++;
+                if (downTime > downTimeMax)
+                { return; }
+                else
+                {
+                    if (downTime == downTimeMax) {
+                        Roll.rollTop("canvas-div");
+                    }
+                    else {
+                        Roll.rollDown("canvas-div", document.documentElement.clientHeight * downTime + 2);
+                    }
+                }
+            });
+            $(".upBtn").click(function () {
+                Roll.rollTop("canvas-div");
+            });
+        }
+
+        var Roll = {
+            rollDown: function (obj, instance) {
+                if (downTime >= 1)
+                {
+                    this.showRollTop();
+                }
+                $("#" + obj).animate({ marginTop: '-' + instance + 'px' });
+            },
+            rollTop: function (obj) {
+                downTime = 0;
+                this.hideRollTop();
+                $("#" + obj).animate({ marginTop: '0px' });
+            },
+            showRollTop: function () {
+                $("." + 'upBtn').show(1000);
+            },
+            hideRollTop: function () {
+                $("." + 'upBtn').hide(1000);
+            }
+        };
     </script>
 </body>
 </html>
